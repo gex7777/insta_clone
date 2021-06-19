@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/services/getcomments.dart';
 import 'package:insta_clone/services/getposts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Instapost extends StatefulWidget {
   const Instapost({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class Instapost extends StatefulWidget {
 class _InstapostState extends State<Instapost> {
   List posts = [];
   List comments = [];
-  List bookMarked = [];
+  List<String> bookMarked = [];
   bool isLoading = false;
   @override
   void initState() {
@@ -25,7 +26,8 @@ class _InstapostState extends State<Instapost> {
     setState(() {
       isLoading = true;
     });
-
+    final prefs = await SharedPreferences.getInstance();
+    bookMarked = prefs.getStringList('bookmark') ?? [];
     var items = await Posts().getPosts();
     var allcomments = await Comments().getComments();
     setState(() {
@@ -49,8 +51,10 @@ class _InstapostState extends State<Instapost> {
     });
   }
 
-  addBookmarked(id) {
+  addBookmarked(id) async {
     bookMarked.contains(id) ? bookMarked.remove(id) : bookMarked.add(id);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('bookmark', bookMarked);
     setState(() {});
   }
 
@@ -71,7 +75,7 @@ class _InstapostState extends State<Instapost> {
     var image = item["high thumbnail"];
     var lowImage = item["low thumbnail"];
     var title = item["title"];
-    var id = item["id"];
+    String id = item["id"];
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
