@@ -24,6 +24,23 @@ class _InstaHomePageState extends State<InstaHomePage> {
           )
         ],
       ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(Icons.home),
+            Icon(Icons.search),
+            Icon(Icons.add_box_outlined),
+            Icon(Icons.favorite_border),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                child: Icon(Icons.person),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
