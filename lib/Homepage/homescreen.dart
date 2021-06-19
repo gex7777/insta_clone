@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_clone/Homepage/components/instafeed.dart';
 
 class InstaHomePage extends StatefulWidget {
   const InstaHomePage({Key? key}) : super(key: key);
@@ -41,6 +42,7 @@ class _InstaHomePageState extends State<InstaHomePage> {
           ],
         ),
       ),
+      body: Instafeed(),
     );
   }
 }
