@@ -26,13 +26,14 @@ class _InstapostState extends State<Instapost> {
     setState(() {
       isLoading = true;
     });
+
+    var items = await Posts().getPosts();
+    //var allcomments = await Comments().getComments();
     final prefs = await SharedPreferences.getInstance();
     bookMarked = prefs.getStringList('bookmark') ?? [];
-    var items = await Posts().getPosts();
-    var allcomments = await Comments().getComments();
     setState(() {
       posts = items;
-      comments = allcomments;
+      // comments = allcomments;
       isLoading = false;
     });
   }

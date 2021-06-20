@@ -8,5 +8,6 @@ class Comments {
       Object obj = json.decode(res.body);
       return obj;
     }
+    return [];
   }
 }
