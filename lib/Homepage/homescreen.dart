@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:insta_clone/Homepage/components/instafeed.dart';
+import 'package:insta_clone/Homepage/components/bookmarkedonly.dart';
+import 'package:insta_clone/Homepage/components/instapost.dart';
+import 'package:insta_clone/services/bookMark.dart';
+import 'package:insta_clone/services/getposts.dart';
 
 class InstaHomePage extends StatefulWidget {
   const InstaHomePage({Key? key}) : super(key: key);
@@ -9,6 +12,26 @@ class InstaHomePage extends StatefulWidget {
 }
 
 class _InstaHomePageState extends State<InstaHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    fetching();
+  }
+
+  fetching() async {
+    var posts = await Posts().getPosts();
+    var bookmarked = await BookMark().getBookmarked();
+    postToDisplay = posts.where((e) => bookmarked.contains(e['id'])).toList();
+  }
+
+  bool showOnlyBookmarked = false;
+  var postToDisplay;
+  toggleBookmarked() async {
+    showOnlyBookmarked = !showOnlyBookmarked;
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +55,11 @@ class _InstaHomePageState extends State<InstaHomePage> {
             Icon(Icons.home),
             Icon(Icons.search),
             Icon(Icons.add_box_outlined),
-            Icon(Icons.favorite_border),
+            IconButton(
+              icon: Icon(Icons.bookmark),
+              onPressed: () => toggleBookmarked(),
+              color: showOnlyBookmarked ? Colors.red : Colors.black,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
@@ -42,7 +69,9 @@ class _InstaHomePageState extends State<InstaHomePage> {
           ],
         ),
       ),
-      body: Instafeed(),
+      body: showOnlyBookmarked
+          ? BookmarkedOnly(posts: postToDisplay)
+          : Instaposts(),
     );
   }
 }
