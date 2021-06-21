@@ -5,8 +5,7 @@ import 'package:insta_clone/services/bookMark.dart';
 import 'package:insta_clone/services/getposts.dart';
 
 class BookmarkedOnly extends StatefulWidget {
-  final posts;
-  const BookmarkedOnly({Key? key, @required this.posts}) : super(key: key);
+  const BookmarkedOnly({Key? key}) : super(key: key);
 
   @override
   _BookmarkedOnlyState createState() => _BookmarkedOnlyState();
@@ -45,7 +44,7 @@ class _BookmarkedOnlyState extends State<BookmarkedOnly> {
       );
     }
     return ListView.builder(
-        itemCount: widget.posts.length,
+        itemCount: postToDisplay.length,
         itemBuilder: (context, index) {
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -53,7 +52,7 @@ class _BookmarkedOnlyState extends State<BookmarkedOnly> {
             children: [
               Flexible(
                   child: Post(
-                      postObj: widget.posts[index], bookMarked: bookmarked)),
+                      postObj: postToDisplay[index], bookMarked: bookmarked)),
             ],
           );
         });
