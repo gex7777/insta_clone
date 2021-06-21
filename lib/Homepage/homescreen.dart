@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:insta_clone/Homepage/components/bookmarkedonly.dart';
-import 'package:insta_clone/Homepage/components/instapost.dart';
+import 'package:insta_clone/Homepage/components/instaposts.dart';
 import 'package:insta_clone/services/bookMark.dart';
 import 'package:insta_clone/services/getposts.dart';
 
@@ -12,6 +11,10 @@ class InstaHomePage extends StatefulWidget {
 }
 
 class _InstaHomePageState extends State<InstaHomePage> {
+  List filteredPosts = [];
+  List posts = [];
+  List bookmarked = [];
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -19,16 +22,26 @@ class _InstaHomePageState extends State<InstaHomePage> {
   }
 
   fetching() async {
-    var posts = await Posts().getPosts();
-    var bookmarked = await BookMark().getBookmarked();
-    postToDisplay = posts.where((e) => bookmarked.contains(e['id'])).toList();
+    setState(() {
+      isLoading = true;
+    });
+    posts = filteredPosts = await Posts().getPosts();
+    bookmarked = await BookMark().getBookmarked();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   bool showOnlyBookmarked = false;
   var postToDisplay;
   toggleBookmarked() async {
+    bookmarked = await BookMark().getBookmarked();
     showOnlyBookmarked = !showOnlyBookmarked;
-
+    if (bookmarked == [] || !showOnlyBookmarked) {
+      filteredPosts = posts;
+    } else {
+      filteredPosts = posts.where((e) => bookmarked.contains(e['id'])).toList();
+    }
     setState(() {});
   }
 
@@ -69,9 +82,9 @@ class _InstaHomePageState extends State<InstaHomePage> {
           ],
         ),
       ),
-      body: showOnlyBookmarked
-          ? BookmarkedOnly(posts: postToDisplay)
-          : Instaposts(),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Instaposts(posts: filteredPosts),
     );
   }
 }

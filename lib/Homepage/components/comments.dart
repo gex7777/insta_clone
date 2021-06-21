@@ -10,6 +10,7 @@ class Commentz extends StatefulWidget {
 
 @override
 class _CommentzState extends State<Commentz> {
+  bool isLoading = false;
   var comments;
   void initState() {
     super.initState();
@@ -17,21 +18,24 @@ class _CommentzState extends State<Commentz> {
   }
 
   getComments() async {
+    setState(() {
+      isLoading = true;
+    });
     comments = await Comments().getComments();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return CircularProgressIndicator();
+    }
     return ListView.builder(
         itemCount: comments.length,
         itemBuilder: (context, index) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Flexible(child: Text("comment")),
-            ],
-          );
+          return Text("comment");
         });
   }
 }

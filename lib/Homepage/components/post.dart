@@ -148,6 +148,7 @@ class _PostState extends State<Post> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: viewComments
               ? Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Commentz(),
                     RichText(
